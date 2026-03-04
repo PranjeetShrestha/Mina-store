@@ -66,19 +66,19 @@ function calculatePrice() {
 
     let cp = Math.floor(price / 2);
 
-    let price30 = Math.floor(cp * 1.30);
-    let price35 = Math.floor(cp * 1.35);
-    let price50 = Math.floor(cp * 1.50);
-    let price60 = Math.floor(cp * 1.60);
+    // let price30 = Math.floor(cp * 1.30);
+    // let price35 = Math.floor(cp * 1.35);
+    // let price50 = Math.floor(cp * 1.50);
+    // let price60 = Math.floor(cp * 1.60);
 
-    const resultHTML = `
-        <strong>MP:</strong> ${price} <br>
-        <strong>CP:</strong> ${cp} <br><br>
-        <strong>30%:</strong> ${price30} |
-        <strong>35%:</strong> ${price35} <br>
-        <strong>50%:</strong> ${price50} |
-        <strong>60%:</strong> ${price60}
-    `;
+    // const resultHTML = `
+    //     <strong>MP:</strong> ${price} <br>
+    //     <strong>CP:</strong> ${cp} <br><br>
+    //     <strong>30%:</strong> ${price30} |
+    //     <strong>35%:</strong> ${price35} <br>
+    //     <strong>50%:</strong> ${price50} |
+    //     <strong>60%:</strong> ${price60}
+    // `;
 
     document.getElementById("result").innerHTML = resultHTML;
 
