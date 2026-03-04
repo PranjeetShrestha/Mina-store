@@ -1,60 +1,106 @@
-const ADMIN_PASSWORD = "1234";
+const themeToggle = document.getElementById("themeToggle");
+const body = document.body;
+const historyDiv = document.getElementById("history");
+const mainContainer = document.getElementById("mainContainer");
+const loginContainer = document.getElementById("loginContainer");
 
-// Wait until page fully loads
-document.addEventListener("DOMContentLoaded", function () {
+// Set your admin password here
+const ADMIN_PASSWORD = "admin123";
 
-    // Dark mode toggle
-    const toggleBtn = document.getElementById("themeToggle");
+// Check if admin already logged in
+if (localStorage.getItem("adminLoggedIn") === "true") {
+    loginContainer.style.display = "none";
+    mainContainer.style.display = "block";
+}
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener("click", function () {
-            document.body.classList.toggle("dark");
-            toggleBtn.textContent =
-                document.body.classList.contains("dark") ? "☀️" : "🌙";
-        });
+// Load theme
+if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("dark");
+    themeToggle.textContent = "☀️";
+}
+
+// Toggle dark mode
+themeToggle.addEventListener("click", () => {
+    body.classList.toggle("dark");
+    if (body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        themeToggle.textContent = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        themeToggle.textContent = "🌙";
     }
-
 });
 
-// Login
+// Load history
+window.onload = function() {
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+    history.forEach(item => addToHistory(item));
+};
+
+// Admin login check
 function checkPassword() {
     const input = document.getElementById("adminPassword").value;
-    const error = document.getElementById("loginError");
+    const errorDiv = document.getElementById("loginError");
 
     if (input === ADMIN_PASSWORD) {
-        document.getElementById("loginContainer").style.display = "none";
-        document.getElementById("mainContainer").style.display = "block";
-        error.textContent = "";
+        localStorage.setItem("adminLoggedIn", "true");
+        loginContainer.style.display = "none";
+        mainContainer.style.display = "block";
     } else {
-        error.textContent = "Incorrect password!";
+        errorDiv.textContent = "Incorrect password!";
     }
 }
 
-// Price calculation
 function calculatePrice() {
-    const codeInput = document.getElementById("codeInput");
-    const result = document.getElementById("result");
-    const history = document.getElementById("history");
+    let input = document.getElementById("codeInput").value.toUpperCase();
+    let price = 0;
 
-    const code = codeInput.value.toUpperCase();
-
-    if (!/^[A-J]+$/.test(code)) {
-        result.textContent = "Invalid code! Use letters A-J only.";
-        return;
+    for (let i = 0; i < input.length; i++) {
+        let ch = input[i];
+        if (ch < 'A' || ch > 'J') {
+            alert("Only letters A-J allowed!");
+            return;
+        }
+        price = (ch.charCodeAt(0) - 65) + price * 10;
     }
 
-    const price = code.length * 10;
-    result.textContent = "Total Price: $" + price;
+    let cp = Math.floor(price / 2);
 
-    const item = document.createElement("div");
-    item.className = "history-item";
-    item.textContent = code + " → $" + price;
-    history.appendChild(item);
+    let price30 = Math.floor(cp * 1.30);
+    let price35 = Math.floor(cp * 1.35);
+    let price50 = Math.floor(cp * 1.50);
+    let price60 = Math.floor(cp * 1.60);
 
-    codeInput.value = "";
+    const resultHTML = `
+        <strong>MP:</strong> ${price} <br>
+        <strong>CP:</strong> ${cp} <br><br>
+        <strong>30%:</strong> ${price30} |
+        <strong>35%:</strong> ${price35} <br>
+        <strong>50%:</strong> ${price50} |
+        <strong>60%:</strong> ${price60}
+    `;
+
+    document.getElementById("result").innerHTML = resultHTML;
+
+    const historyItem = input + " → MP:" + price + " CP:" + cp;
+    saveHistory(historyItem);
+    addToHistory(historyItem);
 }
 
-// Clear history
+function saveHistory(item) {
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+    history.unshift(item);
+    localStorage.setItem("history", JSON.stringify(history));
+}
+
+function addToHistory(item) {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.textContent = item;
+    historyDiv.prepend(div);
+}
+
 function clearHistory() {
-    document.getElementById("history").innerHTML = "";
+    localStorage.removeItem("history");
+    historyDiv.innerHTML = "";
 }
