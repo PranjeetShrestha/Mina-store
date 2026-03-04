@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Shop Calculator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="loginContainer" class="login-container">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPassword" placeholder="Enter Admin Password">
+    <button onclick="checkPassword()">Login</button>
+    <div id="loginError" class="error"></div>
+</div>
+
+<div class="container" id="mainContainer" style="display:none;">
+    <div class="top-bar">
+        <h2>Shop Premium Calculator</h2>
+        <button id="themeToggle">🌙</button>
+    </div>
+
+    <input type="text" id="codeInput" maxlength="5" placeholder="Enter Code (A-J only)">
+    <button onclick="calculatePrice()">Calculate</button>
+
+    <div id="result"></div>
+
+    <h3>History</h3>
+    <div id="history"></div>
+    <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
