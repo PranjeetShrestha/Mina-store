@@ -5,7 +5,7 @@ const mainContainer = document.getElementById("mainContainer");
 const loginContainer = document.getElementById("loginContainer");
 
 // Set your admin password here
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_PASSWORD = "Min@store";
 
 // Check if admin already logged in
 if (localStorage.getItem("adminLoggedIn") === "true") {
