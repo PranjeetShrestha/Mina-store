@@ -66,10 +66,15 @@ function calculatePrice() {
 
     let cp = Math.floor(price / 2);
 
-    // let price30 = Math.floor(cp * 1.30);
-    // let price35 = Math.floor(cp * 1.35);
-    // let price50 = Math.floor(cp * 1.50);
-    // let price60 = Math.floor(cp * 1.60);
+    let price30 = Math.floor(cp * 1.30);
+    let price35 = Math.floor(cp * 1.35);
+    let price50 = Math.floor(cp * 1.50);
+    let price60 = Math.floor(cp * 1.60);
+
+    const resultHTML = `
+        <strong>MP:</strong> ${price} <br>
+        <strong>CP:</strong> ${cp} <br><br>
+    `;
 
     // const resultHTML = `
     //     <strong>MP:</strong> ${price} <br>
