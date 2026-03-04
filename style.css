@@ -4,6 +4,9 @@
     --text: #111;
     --primary: #6a11cb;
     --accent: #2575fc;
+    --input-bg: #fff;
+    --input-border: rgba(0,0,0,0.2);
+    --history-bg: rgba(0,0,0,0.05);
 }
 
 body.dark {
@@ -12,12 +15,15 @@ body.dark {
     --text: #fff;
     --primary: #8e2de2;
     --accent: #4a00e0;
+    --input-bg: rgba(255,255,255,0.1);
+    --input-border: rgba(255,255,255,0.3);
+    --history-bg: rgba(255,255,255,0.1);
 }
 
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #f0f2f5, #d9d9d9);
+    background: var(--bg);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,7 +45,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Top bar with title and dark mode button */
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -47,15 +52,17 @@ body {
     margin-bottom: 20px;
 }
 
-/* Input fields */
+/* Inputs */
 input {
     width: 100%;
     padding: 14px;
     margin: 12px 0;
     font-size: 16px;
     border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid var(--input-border);
     outline: none;
+    background: var(--input-bg);
+    color: var(--text);
     transition: all 0.2s ease;
 }
 
@@ -82,31 +89,27 @@ button:hover {
     transform: translateY(-2px);
 }
 
-/* Result and history */
+/* Result */
 #result {
     margin-top: 20px;
     font-size: 15px;
 }
 
+/* History */
 #history {
     margin-top: 10px;
     max-height: 200px;
     overflow-y: auto;
     font-size: 14px;
-    border-top: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid var(--input-border);
     padding-top: 10px;
 }
 
 .history-item {
     margin-bottom: 6px;
     padding: 6px;
-    background: rgba(0,0,0,0.05);
+    background: var(--history-bg);
     border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-body.dark .history-item {
-    background: rgba(255,255,255,0.1);
 }
 
 /* Clear button */
@@ -121,7 +124,7 @@ body.dark .history-item {
     margin-top: 5px;
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 480px) {
     .container, .login-container {
         padding: 20px 15px;
