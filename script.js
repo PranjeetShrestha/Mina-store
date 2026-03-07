@@ -46,7 +46,7 @@ async function checkPassword() {
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashHex = Array.from(new Uint8Array(hashBuffer))
         .map(b => b.toString(16).padStart(2, "0")).join("");
-    if (hashHex === ADMIN_HASH) { ... }
+    if (hashHex === ADMIN_HASH) { e5209f41685bc273dfc3d5e54db543d464798fdbcba5f20ebce9d4886c2be94b }
 }
 
 
