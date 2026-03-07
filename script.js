@@ -4,9 +4,8 @@ const historyDiv = document.getElementById("history");
 const mainContainer = document.getElementById("mainContainer");
 const loginContainer = document.getElementById("loginContainer");
 
-// Set your admin password here
 const ADMIN_HASH = "e5209f41685bc273dfc3d5e54db543d464798fdbcba5f20ebce9d4886c2be94b";
-
+const SHOW_MARGINS = false;
 
 // Check if admin already logged in
 if (localStorage.getItem("adminLoggedIn") === "true") {
@@ -56,7 +55,6 @@ async function checkPassword() {
     }
 }
 
-
 function calculatePrice() {
     let input = document.getElementById("codeInput").value.toUpperCase();
     let price = 0;
@@ -72,22 +70,11 @@ function calculatePrice() {
 
     let cp = Math.floor(price / 2);
 
-    let price30 = Math.floor(cp * 1.30);
-    let price35 = Math.floor(cp * 1.35);
-    let price50 = Math.floor(cp * 1.50);
-    let price60 = Math.floor(cp * 1.60);
-
     const resultHTML = `
         <strong>MP:</strong> ${price} <br>
         <strong>CP:</strong> ${cp} <br><br>
     `;
-//here
-const SHOW_MARGINS = false; // flip to true to enable
 
-if (SHOW_MARGINS) {
-    // show the 30%/35%/50%/60% pricing block
-}
-    //here
     document.getElementById("result").innerHTML = resultHTML;
 
     const historyItem = input + " → MP:" + price + " CP:" + cp;
@@ -96,8 +83,10 @@ if (SHOW_MARGINS) {
 }
 
 function saveHistory(item) {
+    const MAX = 50;
     let history = JSON.parse(localStorage.getItem("history")) || [];
     history.unshift(item);
+    if (history.length > MAX) history = history.slice(0, MAX);
     localStorage.setItem("history", JSON.stringify(history));
 }
 
