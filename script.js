@@ -5,7 +5,8 @@ const mainContainer = document.getElementById("mainContainer");
 const loginContainer = document.getElementById("loginContainer");
 
 // Set your admin password here
-const ADMIN_PASSWORD = "Min@store";
+const ADMIN_HASH = "e5209f41685bc273dfc3d5e54db543d464798fdbcba5f20ebce9d4886c2be94b";
+
 
 // Check if admin already logged in
 if (localStorage.getItem("adminLoggedIn") === "true") {
@@ -38,18 +39,16 @@ window.onload = function() {
 };
 
 // Admin login check
-function checkPassword() {
+async function checkPassword() {
     const input = document.getElementById("adminPassword").value;
-    const errorDiv = document.getElementById("loginError");
-
-    if (input === ADMIN_PASSWORD) {
-        localStorage.setItem("adminLoggedIn", "true");
-        loginContainer.style.display = "none";
-        mainContainer.style.display = "block";
-    } else {
-        errorDiv.textContent = "Incorrect password!";
-    }
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashHex = Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, "0")).join("");
+    if (hashHex === ADMIN_HASH) { ... }
 }
+
 
 function calculatePrice() {
     let input = document.getElementById("codeInput").value.toUpperCase();
