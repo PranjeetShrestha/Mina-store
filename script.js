@@ -76,11 +76,7 @@ function calculatePrice() {
         <strong>CP:</strong> ${cp} <br><br>
     `;
 //here
-const SHOW_MARGINS = false;
 
-const resultHTML = SHOW_MARGINS
-    ? `MP: ${price} CP: ${cp} 30%: ${price30}...`
-    : `MP: ${price} CP: ${cp}`;
     //here
     document.getElementById("result").innerHTML = resultHTML;
 
