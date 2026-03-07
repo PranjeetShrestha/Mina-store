@@ -41,12 +41,19 @@ window.onload = function() {
 // Admin login check
 async function checkPassword() {
     const input = document.getElementById("adminPassword").value;
+    const errorDiv = document.getElementById("loginError");
     const encoder = new TextEncoder();
     const data = encoder.encode(input);
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashHex = Array.from(new Uint8Array(hashBuffer))
         .map(b => b.toString(16).padStart(2, "0")).join("");
-    if (hashHex === ADMIN_HASH) { e5209f41685bc273dfc3d5e54db543d464798fdbcba5f20ebce9d4886c2be94b }
+    if (hashHex === ADMIN_HASH) {
+        localStorage.setItem("adminLoggedIn", "true");
+        loginContainer.style.display = "none";
+        mainContainer.style.display = "block";
+    } else {
+        errorDiv.textContent = "Incorrect password!";
+    }
 }
 
 
