@@ -76,7 +76,11 @@ function calculatePrice() {
         <strong>CP:</strong> ${cp} <br><br>
     `;
 //here
+const SHOW_MARGINS = false; // flip to true to enable
 
+if (SHOW_MARGINS) {
+    // show the 30%/35%/50%/60% pricing block
+}
     //here
     document.getElementById("result").innerHTML = resultHTML;
 
