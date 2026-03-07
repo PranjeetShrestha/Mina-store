@@ -75,16 +75,13 @@ function calculatePrice() {
         <strong>MP:</strong> ${price} <br>
         <strong>CP:</strong> ${cp} <br><br>
     `;
+//here
+const SHOW_MARGINS = false;
 
-    // const resultHTML = `
-    //     <strong>MP:</strong> ${price} <br>
-    //     <strong>CP:</strong> ${cp} <br><br>
-    //     <strong>30%:</strong> ${price30} |
-    //     <strong>35%:</strong> ${price35} <br>
-    //     <strong>50%:</strong> ${price50} |
-    //     <strong>60%:</strong> ${price60}
-    // `;
-
+const resultHTML = SHOW_MARGINS
+    ? `MP: ${price} CP: ${cp} 30%: ${price30}...`
+    : `MP: ${price} CP: ${cp}`;
+    //here
     document.getElementById("result").innerHTML = resultHTML;
 
     const historyItem = input + " → MP:" + price + " CP:" + cp;
