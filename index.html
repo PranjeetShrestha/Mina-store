@@ -5,8 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mina Store</title>
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6a11cb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mina Store">
 </head>
 <body>
+
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <p id="confirmMessage">Are you sure?</p>
+        <div class="confirm-actions">
+            <button class="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+            <button class="clear-btn" style="margin:0;" id="confirmOkBtn">Confirm</button>
+        </div>
+    </div>
+</div>
 
 <div id="loginContainer" class="login-container">
     <h2>Admin Login</h2>
@@ -18,17 +33,58 @@
 <div class="container" id="mainContainer" style="display:none;">
     <div class="top-bar">
         <h2>Mina Store</h2>
-        <button id="themeToggle">🌙</button>
+        <div class="top-bar-actions">
+            <button class="icon-btn" id="themeToggle">🌙</button>
+            <button class="icon-btn logout-btn" onclick="logout()">Logout</button>
+        </div>
     </div>
 
-    <input type="text" id="codeInput" maxlength="5" placeholder="Enter Code (A-J only)">
-    <button onclick="calculatePrice()">Calculate</button>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('retail')">Retail</button>
+        <button class="tab-btn" onclick="switchTab('wholesale')">Wholesale</button>
+    </div>
 
-    <div id="result"></div>
+    <div id="retailTab">
+        <input type="text" id="codeInput" maxlength="5" placeholder="Enter Code (A-J only)">
+        <p class="enter-hint">Press Enter to calculate</p>
+        <button onclick="calculatePrice()">Calculate</button>
+        <div id="result"></div>
+    </div>
 
-    <h3>History</h3>
-    <div id="history"></div>
-    <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+    <div id="wholesaleTab" style="display:none;">
+        <input type="text" id="wholesaleInput" maxlength="5" placeholder="Enter Code (A-J only)">
+        <p class="enter-hint">Press Enter to calculate</p>
+        <button onclick="calculateWholesale()">Calculate Wholesale</button>
+        <div id="wholesaleResult"></div>
+    </div>
+
+    <div class="history-section">
+        <div class="history-header">
+            <h3>History</h3>
+            <span class="counter-badge" id="counterBadge">0 today</span>
+        </div>
+
+        <div id="retailHistoryWrapper">
+            <div class="history-box" id="retailHistory"></div>
+            <div class="history-totals" id="retailTotals" style="display:none;">
+                <div class="total-label">Totals</div>
+                <span class="hi-mp">Total MP: <span id="totalRetailMP">0</span></span> &nbsp;
+                <span class="hi-cp">Total CP: <span id="totalRetailCP">0</span></span>
+            </div>
+        </div>
+
+        <div id="wholesaleHistoryWrapper" style="display:none;">
+            <div class="history-box" id="wholesaleHistory"></div>
+            <div class="history-totals" id="wholesaleTotals" style="display:none;">
+                <div class="total-label">Totals</div>
+                <span class="hi-mp">Total MP: <span id="totalWholesaleMP">0</span></span> &nbsp;
+                <span class="hi-cp">Total CP: <span id="totalWholesaleCP">0</span></span> &nbsp;
+                <span class="hi-wp">Total WP: <span id="totalWholesaleWP">0</span></span>
+            </div>
+        </div>
+
+        <button class="clear-btn" onclick="confirmClearHistory()">Clear History</button>
+    </div>
 </div>
 
 <script src="script.js"></script>
