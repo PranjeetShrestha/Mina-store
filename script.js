@@ -10,6 +10,7 @@ const loginContainer = document.getElementById("loginContainer");
 
 const ADMIN_HASH = "e5209f41685bc273dfc3d5e54db543d464798fdbcba5f20ebce9d4886c2be94b";
 let activeHistoryTab = "retail";
+let activeSummaryTab = "retail";
 
 // --- Theme ---
 function applyTheme(dark) {
@@ -59,6 +60,7 @@ window.onload = function() {
     loadHistory("retail");
     loadHistory("wholesale");
     updateCounter();
+    renderCombinedSummary();
 };
 
 async function checkPassword() {
@@ -101,6 +103,21 @@ function switchHistory(tab) {
     activeHistoryTab = tab;
     document.getElementById("retailHistoryWrapper").style.display = tab === "retail" ? "block" : "none";
     document.getElementById("wholesaleHistoryWrapper").style.display = tab === "wholesale" ? "block" : "none";
+}
+
+function switchSummary(tab) {
+    activeSummaryTab = tab;
+    document.getElementById("retailSummary").style.display = tab === "retail" ? "block" : "none";
+    document.getElementById("wholesaleSummary").style.display = tab === "wholesale" ? "block" : "none";
+    document.getElementById("combinedSummary").style.display = tab === "combined" ? "block" : "none";
+    document.querySelectorAll(".summary-tab-btn").forEach((btn, i) => {
+        btn.classList.toggle("active",
+            (i === 0 && tab === "retail") ||
+            (i === 1 && tab === "wholesale") ||
+            (i === 2 && tab === "combined")
+        );
+    });
+    if (tab === "combined") renderCombinedSummary();
 }
 
 // --- Decode ---
@@ -252,19 +269,13 @@ function addSwipe(el, bg, onDelete) {
     let startX = 0, currentX = 0, isDragging = false;
     const THRESHOLD = 80;
 
-    function onStart(x) {
-        startX = x;
-        isDragging = true;
-        el.classList.add("swiping");
-    }
-
+    function onStart(x) { startX = x; isDragging = true; el.classList.add("swiping"); }
     function onMove(x) {
         if (!isDragging) return;
         currentX = Math.min(0, x - startX);
         el.style.transform = `translateX(${currentX}px)`;
         bg.style.opacity = Math.min(1, Math.abs(currentX) / THRESHOLD);
     }
-
     function onEnd() {
         if (!isDragging) return;
         isDragging = false;
@@ -301,13 +312,20 @@ function confirmDelete(type, item, wrapper) {
 
 function updateTotals(type) {
     let history = JSON.parse(localStorage.getItem("history_" + type)) || [];
+
+    // Update item count — always show, 0 if empty
+    const countEl = document.getElementById(type + "ItemCount");
+    countEl.textContent = `${history.length} item${history.length !== 1 ? "s" : ""}`;
+
     if (history.length === 0) {
         document.getElementById(type + "Totals").style.display = "none";
         return;
     }
+
     document.getElementById(type + "Totals").style.display = "block";
     let totalMP = history.reduce((sum, i) => sum + i.mp, 0);
     let totalCP = history.reduce((sum, i) => sum + i.cp, 0);
+
     if (type === "retail") {
         document.getElementById("totalRetailMP").textContent = totalMP;
         document.getElementById("totalRetailCP").textContent = totalCP;
@@ -317,6 +335,116 @@ function updateTotals(type) {
         document.getElementById("totalWholesaleCP").textContent = totalCP;
         document.getElementById("totalWholesaleWP").textContent = totalWP;
     }
+}
+
+// --- Sales Summary ---
+function calculateSummary(type) {
+    const salePriceEl = document.getElementById(type + "SalePrice");
+    const resultEl = document.getElementById(type + "SummaryResult");
+    const salePrice = parseFloat(salePriceEl.value);
+
+    if (isNaN(salePrice) || salePrice < 0) {
+        resultEl.innerHTML = `<span class="inline-error">Please enter a valid sale price.</span>`;
+        return;
+    }
+
+    const history = JSON.parse(localStorage.getItem("history_" + type)) || [];
+    if (history.length === 0) {
+        resultEl.innerHTML = `<span class="inline-error">No ${type} history to calculate from.</span>`;
+        return;
+    }
+
+    const totalMP = history.reduce((sum, i) => sum + i.mp, 0);
+    const totalCP = history.reduce((sum, i) => sum + i.cp, 0);
+    const totalWP = type === "wholesale" ? history.reduce((sum, i) => sum + (i.wp || 0), 0) : null;
+    const baseCost = type === "wholesale" ? totalWP : totalCP;
+    const profit = salePrice - baseCost;
+    const profitPct = baseCost > 0 ? ((profit / baseCost) * 100).toFixed(1) : 0;
+    const isProfit = profit >= 0;
+    const isBreakeven = profit === 0;
+
+    const plClass = isBreakeven ? "breakeven-row" : (isProfit ? "profit-row" : "loss-row");
+    const plLabel = isBreakeven ? "Break Even" : (isProfit ? "Profit" : "Loss");
+    const plSign = isProfit && !isBreakeven ? "+" : "";
+
+    resultEl.innerHTML = `
+        <div class="summary-card">
+            <div class="summary-row">
+                <span class="row-label">Items</span>
+                <span class="row-value">${history.length}</span>
+            </div>
+            <div class="summary-row">
+                <span class="row-label">Total MP</span>
+                <span class="row-value" style="color:#6a11cb">${totalMP}</span>
+            </div>
+            <div class="summary-row">
+                <span class="row-label">Total CP</span>
+                <span class="row-value" style="color:#2575fc">${totalCP}</span>
+            </div>
+            ${type === "wholesale" ? `
+            <div class="summary-row">
+                <span class="row-label">Total WP</span>
+                <span class="row-value" style="color:#16a34a">${totalWP}</span>
+            </div>` : ""}
+            <div class="summary-row">
+                <span class="row-label">Sale Price</span>
+                <span class="row-value">${salePrice}</span>
+            </div>
+            <div class="summary-row">
+                <span class="row-label">Base Cost (${type === "wholesale" ? "WP" : "CP"})</span>
+                <span class="row-value">${baseCost}</span>
+            </div>
+            <div class="summary-row ${plClass}">
+                <span class="row-label">${plLabel}</span>
+                <span class="row-value">${plSign}${profit} (${plSign}${profitPct}%)</span>
+            </div>
+        </div>
+    `;
+}
+
+function renderCombinedSummary() {
+    const resultEl = document.getElementById("combinedSummaryResult");
+    const retail = JSON.parse(localStorage.getItem("history_retail")) || [];
+    const wholesale = JSON.parse(localStorage.getItem("history_wholesale")) || [];
+
+    if (retail.length === 0 && wholesale.length === 0) {
+        resultEl.innerHTML = `<p class="summary-empty">No history data yet.</p>`;
+        return;
+    }
+
+    const totalRetailMP = retail.reduce((s, i) => s + i.mp, 0);
+    const totalRetailCP = retail.reduce((s, i) => s + i.cp, 0);
+    const totalWholesaleMP = wholesale.reduce((s, i) => s + i.mp, 0);
+    const totalWholesaleCP = wholesale.reduce((s, i) => s + i.cp, 0);
+    const totalWholesaleWP = wholesale.reduce((s, i) => s + (i.wp || 0), 0);
+    const totalItems = retail.length + wholesale.length;
+    const totalMP = totalRetailMP + totalWholesaleMP;
+    const totalCP = totalRetailCP + totalWholesaleCP;
+
+    resultEl.innerHTML = `
+        <div class="summary-card">
+            <div class="summary-row">
+                <span class="row-label">Total Items</span>
+                <span class="row-value">${totalItems} (${retail.length} retail, ${wholesale.length} wholesale)</span>
+            </div>
+            <div class="summary-row">
+                <span class="row-label">Total MP (all)</span>
+                <span class="row-value" style="color:#6a11cb">${totalMP}</span>
+            </div>
+            <div class="summary-row">
+                <span class="row-label">Total CP (all)</span>
+                <span class="row-value" style="color:#2575fc">${totalCP}</span>
+            </div>
+            <div class="summary-row">
+                <span class="row-label">Retail MP / CP</span>
+                <span class="row-value">${totalRetailMP} / ${totalRetailCP}</span>
+            </div>
+            <div class="summary-row">
+                <span class="row-label">Wholesale MP / CP / WP</span>
+                <span class="row-value">${totalWholesaleMP} / ${totalWholesaleCP} / ${totalWholesaleWP}</span>
+            </div>
+        </div>
+    `;
 }
 
 // --- Confirm Dialog ---
@@ -335,5 +463,7 @@ function confirmClearHistory() {
         localStorage.removeItem("history_" + activeHistoryTab);
         document.getElementById(activeHistoryTab + "History").innerHTML = "";
         document.getElementById(activeHistoryTab + "Totals").style.display = "none";
+        updateTotals(activeHistoryTab);
+        if (activeSummaryTab === "combined") renderCombinedSummary();
     });
 }
