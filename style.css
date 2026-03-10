@@ -11,6 +11,8 @@
     --input-bg: #fff;
     --input-border: rgba(0,0,0,0.2);
     --history-bg: rgba(0,0,0,0.05);
+    --profit: #16a34a;
+    --loss: #d9534f;
 }
 
 body.dark {
@@ -22,6 +24,8 @@ body.dark {
     --input-bg: rgba(255,255,255,0.1);
     --input-border: rgba(255,255,255,0.3);
     --history-bg: rgba(255,255,255,0.1);
+    --profit: #4ade80;
+    --loss: #f87171;
 }
 
 body {
@@ -30,7 +34,7 @@ body {
     background: var(--bg);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
     color: var(--text);
     padding: 15px;
@@ -47,6 +51,11 @@ body {
     backdrop-filter: blur(10px);
     text-align: center;
     transition: all 0.3s ease;
+    margin: auto;
+}
+
+.login-container {
+    margin: auto;
 }
 
 .top-bar {
@@ -140,6 +149,7 @@ button:hover {
     margin-top: 4px;
 }
 
+/* History */
 .history-section {
     margin-top: 20px;
 }
@@ -151,9 +161,7 @@ button:hover {
     margin-bottom: 8px;
 }
 
-.history-header h3 {
-    margin: 0;
-}
+.history-header h3 { margin: 0; }
 
 .counter-badge {
     font-size: 12px;
@@ -170,6 +178,20 @@ button:hover {
     font-size: 14px;
     border-top: 1px solid var(--input-border);
     padding-top: 10px;
+}
+
+.history-meta {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 6px;
+    margin-bottom: 2px;
+}
+
+.item-count {
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.45;
+    font-style: italic;
 }
 
 .history-item-wrapper {
@@ -214,13 +236,8 @@ button:hover {
     user-select: none;
 }
 
-.history-item.swiping {
-    transition: none;
-}
-
-.history-item-left {
-    flex: 1;
-}
+.history-item.swiping { transition: none; }
+.history-item-left { flex: 1; }
 
 .history-item .hi-code {
     font-weight: 700;
@@ -332,6 +349,128 @@ body.dark .history-totals .hi-wp { color: #4ade80; }
     margin-bottom: 4px;
 }
 
+/* Sales Summary */
+.summary-section {
+    margin-top: 24px;
+    border-top: 1px solid var(--input-border);
+    padding-top: 20px;
+}
+
+.summary-header {
+    margin-bottom: 14px;
+}
+
+.summary-header h3 {
+    margin: 0 0 10px 0;
+    text-align: left;
+}
+
+.summary-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.summary-tab-btn {
+    flex: 1;
+    padding: 7px;
+    font-size: 13px;
+    margin: 0;
+    background: var(--history-bg);
+    color: var(--text);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.summary-tab-btn.active {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+}
+
+.summary-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.summary-input-row input {
+    flex: 1;
+    margin: 0;
+}
+
+.summary-calc-btn {
+    width: auto;
+    padding: 12px 16px;
+    margin: 0;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.summary-card {
+    margin-top: 14px;
+    background: var(--history-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: left;
+}
+
+.summary-card .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.summary-card .summary-row:last-child {
+    border-bottom: none;
+    padding-top: 10px;
+    margin-top: 4px;
+}
+
+.summary-card .summary-row .row-label {
+    opacity: 0.6;
+    font-size: 12px;
+}
+
+.summary-card .summary-row .row-value {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.summary-card .profit-row .row-label,
+.summary-card .profit-row .row-value {
+    color: var(--profit);
+    opacity: 1;
+    font-size: 15px;
+}
+
+.summary-card .loss-row .row-label,
+.summary-card .loss-row .row-value {
+    color: var(--loss);
+    opacity: 1;
+    font-size: 15px;
+}
+
+.summary-card .breakeven-row .row-label,
+.summary-card .breakeven-row .row-value {
+    color: var(--text);
+    opacity: 0.6;
+    font-size: 14px;
+}
+
+.summary-empty {
+    text-align: center;
+    opacity: 0.4;
+    font-size: 13px;
+    padding: 16px 0;
+}
+
+/* Animations */
 @keyframes shake {
     0%   { transform: translateX(0); }
     15%  { transform: translateX(-8px); }
@@ -357,6 +496,7 @@ body.dark .history-totals .hi-wp { color: #4ade80; }
     animation: flashNew 0.8s ease forwards;
 }
 
+/* Confirm dialog */
 .confirm-overlay {
     display: none;
     position: fixed;
@@ -367,9 +507,7 @@ body.dark .history-totals .hi-wp { color: #4ade80; }
     align-items: center;
 }
 
-.confirm-overlay.show {
-    display: flex;
-}
+.confirm-overlay.show { display: flex; }
 
 .confirm-box {
     background: var(--card);
