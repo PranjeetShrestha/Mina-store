@@ -58,7 +58,7 @@
         <div id="wholesaleResult"></div>
     </div>
 
-    <!-- History Section -->
+    <!-- History -->
     <div class="history-section">
         <div class="history-header">
             <h3>History</h3>
@@ -67,7 +67,7 @@
 
         <div id="retailHistoryWrapper">
             <div class="history-box" id="retailHistory"></div>
-            <div class="history-meta" id="retailMeta">
+            <div class="history-meta">
                 <span class="item-count" id="retailItemCount">0 items</span>
             </div>
             <div class="history-totals" id="retailTotals" style="display:none;">
@@ -79,7 +79,7 @@
 
         <div id="wholesaleHistoryWrapper" style="display:none;">
             <div class="history-box" id="wholesaleHistory"></div>
-            <div class="history-meta" id="wholesaleMeta">
+            <div class="history-meta">
                 <span class="item-count" id="wholesaleItemCount">0 items</span>
             </div>
             <div class="history-totals" id="wholesaleTotals" style="display:none;">
@@ -93,39 +93,43 @@
         <button class="clear-btn" onclick="confirmClearHistory()">Clear History</button>
     </div>
 
-    <!-- Sales Summary Section -->
-    <div class="summary-section">
-        <div class="summary-header">
-            <h3>Sales Summary</h3>
-            <div class="summary-tabs">
-                <button class="summary-tab-btn active" onclick="switchSummary('retail')">Retail</button>
-                <button class="summary-tab-btn" onclick="switchSummary('wholesale')">Wholesale</button>
-                <button class="summary-tab-btn" onclick="switchSummary('combined')">Combined</button>
-            </div>
+    <!-- Sales Section -->
+    <div class="sales-section">
+        <div class="sales-header">
+            <h3>Sales</h3>
+            <button class="clear-btn" style="width:auto;margin:0;padding:6px 12px;font-size:12px;" onclick="confirmClearSales()">Clear Sales</button>
         </div>
 
-        <!-- Retail Summary -->
-        <div id="retailSummary">
-            <div class="summary-input-row">
-                <input type="number" id="retailSalePrice" placeholder="Enter actual sale price">
-                <button class="summary-calc-btn" onclick="calculateSummary('retail')">Calculate</button>
+        <div class="customer-cart">
+            <div class="cart-header">
+                <span class="cart-title">New Sale</span>
+                <button onclick="clearCart()" style="width:auto;margin:0;padding:4px 10px;font-size:11px;background:var(--history-bg);color:var(--text);border:1px solid var(--input-border);">Clear Cart</button>
             </div>
-            <div id="retailSummaryResult"></div>
+
+            <div class="cart-customer-row">
+                <input type="text" id="customerName" placeholder="Customer name (optional)">
+            </div>
+
+            <div class="cart-input-row">
+                <input type="text" class="inp-code" id="cartCode" maxlength="5" placeholder="Code">
+                <input type="number" class="inp-sp" id="cartSP" placeholder="SP">
+                <input type="number" class="inp-qty" id="cartQty" placeholder="Qty" min="1" value="1">
+                <button class="cart-add-btn" onclick="addToCart()">+ Add</button>
+            </div>
+            <div class="cart-decoded" id="cartDecoded"></div>
+
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-total" id="cartTotal"></div>
+            <button class="cart-save-btn" onclick="saveSale()">Save Sale</button>
         </div>
 
-        <!-- Wholesale Summary -->
-        <div id="wholesaleSummary" style="display:none;">
-            <div class="summary-input-row">
-                <input type="number" id="wholesaleSalePrice" placeholder="Enter actual sale price">
-                <button class="summary-calc-btn" onclick="calculateSummary('wholesale')">Calculate</button>
-            </div>
-            <div id="wholesaleSummaryResult"></div>
+        <div class="sales-box" id="salesBox"></div>
+
+        <div class="sales-meta">
+            <span class="sales-count" id="salesCount">0 sales</span>
         </div>
 
-        <!-- Combined Summary -->
-        <div id="combinedSummary" style="display:none;">
-            <div id="combinedSummaryResult"></div>
-        </div>
+        <div id="salesSummary"></div>
     </div>
 </div>
 
