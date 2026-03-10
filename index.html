@@ -58,6 +58,7 @@
         <div id="wholesaleResult"></div>
     </div>
 
+    <!-- History Section -->
     <div class="history-section">
         <div class="history-header">
             <h3>History</h3>
@@ -66,6 +67,9 @@
 
         <div id="retailHistoryWrapper">
             <div class="history-box" id="retailHistory"></div>
+            <div class="history-meta" id="retailMeta">
+                <span class="item-count" id="retailItemCount">0 items</span>
+            </div>
             <div class="history-totals" id="retailTotals" style="display:none;">
                 <div class="total-label">Totals</div>
                 <span class="hi-mp">Total MP: <span id="totalRetailMP">0</span></span> &nbsp;
@@ -75,6 +79,9 @@
 
         <div id="wholesaleHistoryWrapper" style="display:none;">
             <div class="history-box" id="wholesaleHistory"></div>
+            <div class="history-meta" id="wholesaleMeta">
+                <span class="item-count" id="wholesaleItemCount">0 items</span>
+            </div>
             <div class="history-totals" id="wholesaleTotals" style="display:none;">
                 <div class="total-label">Totals</div>
                 <span class="hi-mp">Total MP: <span id="totalWholesaleMP">0</span></span> &nbsp;
@@ -84,6 +91,41 @@
         </div>
 
         <button class="clear-btn" onclick="confirmClearHistory()">Clear History</button>
+    </div>
+
+    <!-- Sales Summary Section -->
+    <div class="summary-section">
+        <div class="summary-header">
+            <h3>Sales Summary</h3>
+            <div class="summary-tabs">
+                <button class="summary-tab-btn active" onclick="switchSummary('retail')">Retail</button>
+                <button class="summary-tab-btn" onclick="switchSummary('wholesale')">Wholesale</button>
+                <button class="summary-tab-btn" onclick="switchSummary('combined')">Combined</button>
+            </div>
+        </div>
+
+        <!-- Retail Summary -->
+        <div id="retailSummary">
+            <div class="summary-input-row">
+                <input type="number" id="retailSalePrice" placeholder="Enter actual sale price">
+                <button class="summary-calc-btn" onclick="calculateSummary('retail')">Calculate</button>
+            </div>
+            <div id="retailSummaryResult"></div>
+        </div>
+
+        <!-- Wholesale Summary -->
+        <div id="wholesaleSummary" style="display:none;">
+            <div class="summary-input-row">
+                <input type="number" id="wholesaleSalePrice" placeholder="Enter actual sale price">
+                <button class="summary-calc-btn" onclick="calculateSummary('wholesale')">Calculate</button>
+            </div>
+            <div id="wholesaleSummaryResult"></div>
+        </div>
+
+        <!-- Combined Summary -->
+        <div id="combinedSummary" style="display:none;">
+            <div id="combinedSummaryResult"></div>
+        </div>
     </div>
 </div>
 
